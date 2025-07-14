@@ -2,31 +2,59 @@
 <html>
 
 <head>
-    <title>Game Stats</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <title>Play Theory | Introduction</title>
+    <meta author="Luke Marren" />
+    <meta http-equiv="pragma" content="no-cache" />
 </head>
 
 <body>
-    <h1>Basketball Game Stats</h1>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Introduction</a></li>
+                <li><a href="analysis.html">Analysis</a></li>
+                <li><a href="contact.html">Contact Luke Marren</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <label for="team">Team:</label>
-    <select id="team">
-        <option value="duke">Duke</option>
-        <option value="unc">UNC</option>
-    </select>
+    <h1>Introducing Play Theory</h1>
+    <p>A full-stack performance analytics platform built <i>exclusively</i> for Illini Men’s Basketball</p>
 
-    <label for="game">Game:</label>
-    <select id="game">
-        <option value="game1">Game 1</option>
-        <option value="game2">Game 2</option>
-    </select>
+    <h2>The Problem</h2>
+    <p>
+        Understanding the specific combination of players and plays to pit against opponents is <i>the</i> age-old problem in basketball coaching.
+    </p>
+    <p>
+        Classic basketball analytics place too much emphasis on abstract boxscore-derived statistics to solve this issue.
+        Such analyses lack the depth necessary to capture more than just the 'what' that occurs underneath play-heavy, fast-paced college basketball.
+    </p>
+    <p>Inspired by modern approaches, such as those pioneered at Harvard by Kirk Goldsberry, I built <i>Play Theory</i> to uncover why certain players, lineups, and plays succeed against specific opponents.</p>
+    <p>I believe coaches, staff members, and players may find my software particularly helpful for improving play-calling, scouting, and individual/team development.</p>
 
-    <button onclick="loadGameData()">Load Game</button>
+    <h2>Your New Analytics Solution</h2>
+    <blockquote>
+        <p>
+            Championships are <strong>not</strong> built on box-scores.
+        </p>
+        <p>
+            They're painstakingly fought for every posession, during every play-call, by each player on the floor.
+        </p>
+    </blockquote>
+    <p>
+        <i>Play Theory</i> breaks down games using <i>SideArm Sports</i> play-by-play data and compiles it back into actionable, interactive insights on player, lineup, and play performance for coaches and players alike.
+    </p>
 
-    <div id="chart" style="width: 600px; height: 400px; margin-top: 30px;"></div>
+    <h2>How It Works</h2>
+    <p><i>Play Theory</i> integrates:</p>
+    <ul>
+        <li>A custom web-scraper</li>
+        <li>A PostgreSQL database</li>
+        <li>A full-stack JavaScript platform</li>
+    </ul>
+    <p>all wrapped in a lightning-fast, modern web interface.</p>
 
-    <script src="main.js"></script>
+    <h2>Example Use-Case: Avenging the UConn Disaster</h2>
 </body>
 
 </html>

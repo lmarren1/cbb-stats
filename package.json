@@ -6,6 +6,8 @@
         "start": "node server/server.js"
     },
     "dependencies": {
-        "pg": "^8.11.3"
+        "axios": "^1.10.0",
+        "cheerio": "^1.1.0",
+        "pg": "^8.16.3"
     }
 }

@@ -1,5 +1,5 @@
 -- Insert data into teams table.
-INSERT INTO "teams" ("team_name")
+INSERT INTO "teams" ("name")
 VALUES
     ('University of Illinois'),
     ('Purdue University');

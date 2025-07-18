@@ -2,30 +2,14 @@
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const fsPromises = require('fs').promises;
+const { log } = require('./middleware/logger');
+const { checkPythonHealth, sendToPython } = require('./controllers/pythonController');
+const { serveFile } = require('./middleware/serveFile');
 
 const PORT = process.env.PORT || 3000;
 
-const log = (message) => {
-    console.log(`[${new Date().toISOString()}] ${message}`);
-}
-
-const serveFile = async (filePath, contentType, response) => {
-    try {
-        const encoding = contentType.includes('text') || contentType === 'application/json' ? 'utf8' : null;
-        const data = await fsPromises.readFile(filePath, encoding);
-        response.writeHead(200, { 'Content-Type': contentType });
-        response.end(data)
-    } catch (err) {
-        log(err);
-        response.writeHead(500);
-        response.end('Server error');
-    }
-}
-
 const server = http.createServer((req, res) => {
     log(`${req.method} request for url: ${req.url}`);
-
     const extension = path.extname(req.url);
     let contentType;
 
@@ -49,10 +33,11 @@ const server = http.createServer((req, res) => {
     const fileExists = fs.existsSync(filePath);
 
     if (fileExists) {
+        log('Success! File found and being served to web browser.')
         serveFile(filePath, contentType, res);
     } else {
-        // 404
-        serveFile(path.join(__dirname, '..', 'client', 'errors', '404.html'), 'text/html', res);
+        log('User Error. File not Found, 404 page being served.')
+        serveFile(path.join(__dirname, '..', 'client', 'error-pages', '404.html'), 'text/html', res);
     }
 });
 

@@ -1,0 +1,32 @@
+/* === Base Reset === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* === Colors === */
+:root {
+    --illinois-orange: #E84A27;
+    --illinois-blue: #13294B;
+}
+
+/* === Typography === */
+body {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    background-color: var(--illinois-blue);
+    letter-spacing: 0.2px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+    color: var(--illinois-orange);
+    font-weight: 1600;
+}
+
+p, li, blockquote {
+    font-weight: 400;
+    color: white;
+}

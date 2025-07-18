@@ -1,5 +1,6 @@
 # Environment Variables
 .env
+python/venv/
 
 # Node.js Modules
 node_modules/

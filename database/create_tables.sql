@@ -55,5 +55,6 @@ CREATE TABLE actions (
     action_type VARCHAR(25) NOT NULL,
     action_time TIME NOT NULL,
     player_id INT NOT NULL REFERENCES players(player_id),
-    action_result VARCHAR(25)
+    action_result VARCHAR(25),
+    action_location VARCHAR(25)
 );

@@ -59,24 +59,6 @@ VALUES
     (2, 1, 2, 3, 4, 7),
     (2, 1, 2, 3, 4, 8);
 
-CREATE TABLE possessions (
-    possession_id SERIAL PRIMARY KEY,
-    game_id INT NOT NULL REFERENCES games(game_id),
-    game_half INT NOT NULL,
-    possession_number INT NOT NULL,
-    offensive_team_id INT NOT NULL REFERENCES teams(team_id),
-    defensive_team_id INT NOT NULL REFERENCES teams(team_id),
-    start_time TIME NOT NULL,
-    end_time TIME NOT NULL,
-    duration INT GENERATED ALWAYS AS (EXTRACT(EPOCH FROM (start_time - end_time))) STORED,
-    offense_start_score INT NOT NULL,
-    offense_end_score INT NOT NULL,
-    defense_score INT NOT NULL,
-    offense_points_scored INT GENERATED ALWAYS AS (offense_end_score - offense_start_score) STORED,
-    offense_score_margin INT GENERATED ALWAYS AS (offense_end_score - defense_score) STORED
-);
-
-
 INSERT INTO possessions (game_id, game_half, possession_number, offensive_team_id, defensive_team_id, start_time, end_time, offense_start_score, offense_end_score, defense_score)
 VALUES
     (1, 1, 1, 2, 1, '00:20:00', '00:19:44', 0, 2, 0),
@@ -220,3 +202,21 @@ VALUES
     (1, 2, 138, 1, 2, '00::', '00::', , , ),
     (1, 2, 139, 2, 1, '00::', '00::', , , ),
     (1, 2, 140, 1, 2, '00::', '00::', , , );
+
+CREATE TABLE actions (
+    action_id SERIAL PRIMARY KEY,
+    previous_action_id INT REFERENCES actions(action_id),
+    possession_id INT NOT NULL REFERENCES possessions(possession_id),
+    offensive_lineup_id INT NOT NULL REFERENCES lineups(lineup_id),
+    defensive_lineup_id INT NOT NULL REFERENCES lineups(lineup_id),
+    action_name VARCHAR(25) NOT NULL,
+    action_type VARCHAR(25) NOT NULL,
+    action_time TIME NOT NULL,
+    player_id INT NOT NULL REFERENCES players(player_id),
+    action_result VARCHAR(25),
+    action_location VARCHAR(25)
+);
+
+INSERT INTO actions (previous_action_id, possession_id, offensive_lineup_id, defensive_lineup_id, action_name, action_type, action_time, player_id, action_result, action_location)
+VALUES
+

@@ -5,28 +5,127 @@
     <meta charset="UTF-8" />
     <meta author="Luke Marren"/>
     <meta http-equiv="pragma" content="no-cache" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Play Theory | Analysis</title>
     <link rel="stylesheet" href="./css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
     <header>
         <nav>
-            <ul>
-                <li><a href="index.html">Introduction</a></li>
+            <ul class="navbar">
+                <li><a class="nav-link" href="index.html">Introduction</a></li>
                 <li><a href="analysis.html">Analysis</a></li>
-                <li><a href="contact.html">Contact Luke Marren</a></li>
                 <li><a href="breakdown.html">App Breakdown</a></li>
+                <li><a href="contact.html">Contact Luke Marren</a></li>
             </ul>
         </nav>
     </header>
 
-    <h1>TODO</h1>
-    <p>Divide into sections for play, lineup, and player performance</p>
+    <div class="container">
+
+        <!-- Filters Sidebar -->
+        <aside>
+            <h2>Filters</h2>
+
+            <!-- Team Filter -->
+            <label class="filter" for="team-input">Select Team:</label>
+            <input type="text" id="team-input" list="team-suggestions" placeholder="Search teams..." autocomplete="off" size="5" />
+            <ul id="team-suggestions"></ul>
+
+            <br><br>
+
+            <!-- Game Filter -->
+            <div id="game-filter">
+                <label class="filter" for="game-input">Select Game:</label>
+                <input type="text" id="game-input" list="game-suggestions" placeholder="Select a game..." autocomplete="off" size="5" />
+                <ul id="game-suggestions"></ul>
+            </div>
+
+            <br><br>
+
+            <!-- Period Filter
+             <div class="hidden-filter">
+                <label class="filter" for="period-input">Select Period(s):</label>
+                <input type="text" id="period-input" list="period-suggestions" placeholder="Select Periods..." autocomplete="off"
+                    size="5" />
+                <ul id="period-suggestions"></ul>
+             </div>
+
+            <br><br> -->
+
+            <!-- Possession Filter
+            <div class="hidden-filter">
+                <label class="filter">Select Possession Range:</label>
+                <div id="possessions">
+                    <input type="number" id="possession-min" placeholder="Possession Minimum">
+                    <br>
+                    <input type="number" id="possession-max" placeholder="Possession Maximum">
+                </div>
+            </div>
+
+            <br><br> -->
+
+            <!-- Action Types Filter -->
+            <div class="hidden-filter">
+                <label class="filter" for="action-type-input">Select Action Types(s):</label>
+                <input type="text" id="action-type-input" list="action-type-suggestions" placeholder="Select Action Types..."
+                    autocomplete="off" size="10" />
+                <ul id="action-type-suggestions"></ul>
+            </div>
+
+            <br><br>
+
+            <!-- Player Filter
+            <div class="hidden-filter">
+                <label class="filter" for="player-input">Select Player(s):</label>
+                <input type="text" id="player-input" list="player-suggestions" placeholder="Select Player(s)" autocomplete="off"
+                    size="10" />
+                <ul id="player-suggestions"></ul>
+            </div> -->
+
+            <!-- Lineups Filter
+            <div class="hidden-filter">
+                <label class="filter" for="lineup-input">Select Lineup(s):</label>
+                <input type="text" id="lineup-input" list="lineup-suggestions" placeholder="Select Lineup(s)" autocomplete="off"
+                    size="10" />
+                <ul id="lineup-suggestions"></ul>
+            </div> -->
+
+        </aside>
+
+        <!-- Main Content -->
+        <main>
+            <h2>Graphs & Tables</h2>
+            <div id="graph"></div>
+
+            <br>
+
+            <div id="table">
+                <table id="possessions-table">
+                    <thead>
+                        <tr>
+                            <th data-key="possession_number">Possession #</th>
+                            <th data-key="duration">Duration (s)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Rows will be inserted dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/analysis.js"></script>
 </body>
+<footer>
+    <p>Made by Luke Marren</p>
+</footer>
 
 </html>

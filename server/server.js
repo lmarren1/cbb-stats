@@ -1,46 +1,27 @@
-// Module import
 const http = require('http');
-const path = require('path');
-const fs = require('fs');
-const { log } = require('./middleware/logger');
-const { checkPythonHealth, sendToPython } = require('./controllers/pythonController');
-const { serveFile } = require('./middleware/serveFile');
+const { parse } = require('url');
+const { handleStatic } = require('./middleware/staticHandler');
+const routes = require('./router');
 
 const PORT = process.env.PORT || 3000;
 
 const server = http.createServer((req, res) => {
-    log(`${req.method} request for url: ${req.url}`);
-    const extension = path.extname(req.url);
-    let contentType;
+    console.log(`${req.method} Request for URL: ${req.url}`);
 
-    switch (extension) {
-        case '.css': contentType = 'text/css'; break;
-        case '.js': contentType = 'text/javascript'; break;
-        case '.json': contentType = 'application/json'; break;
-        case '.png': contentType = 'image/png'; break;
-        case '.jpg': contentType = 'image/jpeg'; break;
-        default: contentType = 'text/html';
-    }
+    // Handle static files
+    if (handleStatic(req, res)) return;
 
-    let filePath =
-        contentType === 'text/html' && req.url === '/'
-            ? path.join(__dirname, '..', 'client', 'index.html')
-            : path.join(__dirname, '..', 'client', req.url);
+    // Handle API routes
+    const parsedUrl = parse(req.url, true);
+    const key = `${req.method} ${parsedUrl.pathname}`;
+    const handler = routes[key];
 
-    // Makes .html extension not required in the browser.
-    if (!extension && req.url.slice(-1) !== '/') filePath += '.html';
-
-    const fileExists = fs.existsSync(filePath);
-
-    if (fileExists) {
-        log('Success! File found and being served to web browser.')
-        serveFile(filePath, contentType, res);
+    if (handler) {
+        handler(req, res);
     } else {
-        log('User Error. File not Found, 404 page being served.')
-        serveFile(path.join(__dirname, '..', 'client', 'error-pages', '404.html'), 'text/html', res);
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Route not found');
     }
 });
 
-server.listen(PORT, () => log(`Server running on port ${PORT}`));
-
-
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));

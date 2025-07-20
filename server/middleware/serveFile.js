@@ -1,5 +1,4 @@
 const fsPromises = require('fs').promises;
-const { log } = require('./logger');
 
 const serveFile = async (filePath, contentType, response) => {
     try {
@@ -8,7 +7,7 @@ const serveFile = async (filePath, contentType, response) => {
         response.writeHead(200, { 'Content-Type': contentType });
         response.end(data)
     } catch (err) {
-        log(err);
+        console.error(err);
         response.writeHead(500);
         response.end('Server error');
     }

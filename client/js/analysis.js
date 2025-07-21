@@ -266,7 +266,7 @@ async function plot() {
             return {
                 x: a.coordinate_x,
                 y: a.coordinate_y,
-                z: a.scoring_play ? a.score_value : 0
+                z: a.scoring_play ? 1 : 0
             };
         });
 
@@ -275,7 +275,22 @@ async function plot() {
             y: normalized.map(d => d.y),
             z: normalized.map(d => d.z),
             type: 'scatter',
-            mode: 'markers'
+            mode: 'markers',
+            marker: {
+                color: normalized.map(d => d.z),
+                opacity: 0.7,
+                colorscale: [
+                    [0, 'red'],
+                    [1, 'green']
+                ],
+                cmin: 0,
+                cmax: 1,
+                colorbar: {
+                    title: 'Shot Result',
+                    tickvals: [0, 1],
+                    ticktext: ['Miss', 'Make']
+                }
+            }
         };
 
         const layout = {

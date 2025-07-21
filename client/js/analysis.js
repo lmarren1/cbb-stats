@@ -236,6 +236,11 @@ function handleActionTypeInput(li) {
 
 async function plot() {
 
+    if (selectedActionTypes.size === 0) {
+        Plotly.purge('graph');
+        return;
+    }
+
     const params = new URLSearchParams();
     selectedActionTypes.forEach(type => params.append('type_text', type));
     params.append('game_id', gameInput.dataset.id);
@@ -247,11 +252,23 @@ async function plot() {
         const response = await fetch(apiUrl);
         const actions = await response.json();
 
-        const normalized = actions.map(a => ({
-            x: a.coordinate_x,
-            y: a.coordinate_y,
-            z: a.scoring_play ? a.score_value : 0
-        }));
+        const normalized = actions.map(a => {
+            if (a.type_text === 'MadeFreeThrow') {
+                if (a.coordinate_x >= 0) {
+                    a.coordinate_x = 28;
+                    a.coordinate_y = 0;
+                } else {
+                    a.coordinate_x = -28;
+                    a.coordinate_y = 0;
+                }
+            }
+
+            return {
+                x: a.coordinate_x,
+                y: a.coordinate_y,
+                z: a.scoring_play ? a.score_value : 0
+            };
+        });
 
         const trace = {
             x: normalized.map(d => d.x),

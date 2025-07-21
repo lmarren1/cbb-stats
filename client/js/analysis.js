@@ -247,10 +247,9 @@ async function plot() {
         const response = await fetch(apiUrl);
         const actions = await response.json();
 
-        // Normalize coordinates: [-50, 50] --> [0, 100], [-25, 25] --> [0, 50]
         const normalized = actions.map(a => ({
-            x: a.coordinate_x + 50,
-            y: a.coordinate_y + 25,
+            x: a.coordinate_x,
+            y: a.coordinate_y,
             z: a.scoring_play ? a.score_value : 0
         }));
 
@@ -263,11 +262,111 @@ async function plot() {
         };
 
         const layout = {
-            title: 'Scoring Map',
-            xaxis: { title: 'Court Width', range: [0, 100], showgrid: false },
-            yaxis: { title: 'Court Height', range: [0, 50], showgrid: false },
-            margin: { t: 40 },
-            plot_bgcolor: '#fff'
+            title: 'Full-Court Shot Map',
+            xaxis: {
+                title: 'Court Length (x)',
+                range: [-47, 47],
+                scaleanchor: 'y',
+                showgrid: false,
+                zeroline: false
+            },
+            yaxis: {
+                title: 'Court Width (y)',
+                range: [-25, 25],
+                showgrid: false,
+                zeroline: false
+            },
+            // Full-Court Shapes --> may be directly applied to half-court.
+            shapes: [
+                {
+                    name: 'Out-of-Bounds Lines',
+                    type: 'rect',
+                    x0: -47,
+                    x1: 47,
+                    y0: -25,
+                    y1: 25
+                },
+                {
+                    name: 'Half-Court Line',
+                    type: 'line',
+                    x0: 0,
+                    x1: 0,
+                    y0: -25,
+                    y1: 25
+                },
+                {
+                    name: 'Center Circle',
+                    type: 'circle',
+                    x0: 6,
+                    x1: -6,
+                    y0: 6,
+                    y1: -6
+                },
+                {
+                    name: 'Right Free-Throw Lane',
+                    type: 'rect',
+                    x0: 47,
+                    x1: 28,
+                    y0: 6,
+                    y1: -6
+                },
+                {
+                    name: 'Left Free-Throw Lane',
+                    type: 'rect',
+                    x0: -47,
+                    x1: -28,
+                    y0: 6,
+                    y1: -6
+                },
+                {
+                    name: 'Right basket',
+                    type: 'circle',
+                    x0: 41,
+                    x1: 42.5,
+                    y0: 0.75,
+                    y1: -0.75
+                },
+                {
+                    name: 'Right Backboard',
+                    type: 'line',
+                    x0: 43,
+                    x1: 43,
+                    y0: 3,
+                    y1: -3
+                },
+                {
+                    name: 'Left Basket',
+                    type: 'circle',
+                    x0: -41,
+                    x1: -42.5,
+                    y0: 0.75,
+                    y1: -0.75
+                },
+                {
+                    name: 'Left Backboard',
+                    type: 'line',
+                    x0: -43,
+                    x1: -43,
+                    y0: 3,
+                    y1: -3
+                },
+                {
+                    name: 'Right Key',
+                    type: 'circle',
+                    x0: 22,
+                    x1: 34,
+                    y0: 6,
+                    y1: -6
+                },
+                {
+                    name: 'Left Key',
+                    type: 'circle',
+                    x0: -22,
+                    x1: -34,
+                    y0: 6,
+                    y1: -6
+                },
+            ]
         };
         const graphDiv = document.getElementById('graph');
         Plotly.purge(graphDiv);

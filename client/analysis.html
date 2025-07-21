@@ -75,7 +75,7 @@
             <div class="hidden-filter">
                 <label class="filter" for="action-type-input">Select Action Types(s):</label>
                 <input type="text" id="action-type-input" list="action-type-suggestions" placeholder="Select Action Types..."
-                    autocomplete="off" size="10" />
+                    autocomplete="off" size="5" multiple=""/>
                 <ul id="action-type-suggestions"></ul>
             </div>
 
@@ -101,24 +101,8 @@
 
         <!-- Main Content -->
         <main>
-            <h2>Graphs & Tables</h2>
+            <h2>Graph</h2>
             <div id="graph"></div>
-
-            <br>
-
-            <div id="table">
-                <table id="possessions-table">
-                    <thead>
-                        <tr>
-                            <th data-key="possession_number">Possession #</th>
-                            <th data-key="duration">Duration (s)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body">
-                        <!-- Rows will be inserted dynamically -->
-                    </tbody>
-                </table>
-            </div>
         </main>
     </div>
 

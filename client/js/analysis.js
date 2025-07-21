@@ -21,10 +21,11 @@ const gameSuggestions = document.getElementById('game-suggestions');
 // Action Type Filter Elements
 const actionTypeInput = document.getElementById('action-type-input');
 const actionTypeSuggestions = document.getElementById('action-type-suggestions');
+const selectedActionTypes = new Set();
 
-// Player Filter Elements
-const playerInput = document.getElementById('player-input');
-const playerSuggestions = document.getElementById('player-suggestions');
+// // Player Filter Elements
+// const playerInput = document.getElementById('player-input');
+// const playerSuggestions = document.getElementById('player-suggestions');
 
 // // Lineup Filter Elements
 // const lineupInput = document.getElementById('lineup-input');
@@ -119,6 +120,8 @@ async function handleTeamSelection(li) {
     const teamName = li.textContent;
 
     teamInput.value = teamName;
+    teamInput.dataset.id = teamId;
+
     clearSuggestions(teamSuggestions);
 
     await fetchGamesForTeam(teamId);
@@ -168,23 +171,109 @@ async function handleGameInput(li) {
     const gameName = li.textContent;
 
     gameInput.value = gameName;
+    gameInput.dataset.id = gameId;
     clearSuggestions(gameSuggestions);
     unhideElementsByClass('hidden-filter');
 
-    // BELOW IS UNDEFINED
-    await fetchGamePeriods(gameId);
-
-    // WHAT DO WE DO FROM HERE??
+    await fetchActionTypes(gameId);
 }
 
-// (5) - (1) --> After team is chosen, fetch relevant games and call populate games list
-async function fetchGamesForTeam(teamId) {
+async function fetchActionTypes(gameId) {
     try {
-        clearSuggestions(gameSuggestions);
-        const res = await fetch(`/api/v1/games?team_id=${teamId}`);
-        const games = await res.json();
-        populateGamesList(games, teamId);
+        const res = await fetch(`/api/v1/actions?game_id=${gameId}`);
+        const action_types = await res.json();
+        populateActionTypesList(action_types);
     } catch (err) {
-        console.error("Error loading games:", err);
+        console.error("Error loading action types:", err);
+    }
+}
+
+function populateActionTypesList(action_types) {
+
+    const distinctActionTypes = new Set([
+        'Dead Ball Rebound', 'End Game', 'End Period',
+        'Jumpball', 'OfficialTVTimeOut', 'RegularTimeOut',
+        'ShortTimeOut', 'Substitution', 'Block Shot', 'Defensive Rebound',
+        'Lost Ball Turnover', 'Offensive Rebound', 'PersonalFoul', 'Steal',
+        'Technical Foul'
+    ]);
+
+    action_types.forEach(action => {
+
+        if (!distinctActionTypes.has(action.type_text)) {
+            distinctActionTypes.add(action.type_text)
+
+            const listElement = document.createElement('li');
+            listElement.textContent = action.type_text;
+            listElement.dataset.id = action.type_text;
+
+            if (selectedActionTypes.has(action.type_text)) {
+                listElement.classList.add('selected');
+            }
+
+            actionTypeSuggestions.appendChild(listElement);
+            actionTypeSuggestions.style.display = 'block';
+        }
+    });
+
+    attachClickHandler(ul = actionTypeSuggestions, handler = handleActionTypeInput);
+}
+
+function handleActionTypeInput(li) {
+    const actionType = li.textContent;
+
+    if (selectedActionTypes.has(actionType)) {
+        selectedActionTypes.delete(actionType);
+        li.classList.remove('selected');
+    } else {
+        selectedActionTypes.add(actionType);
+        li.classList.add('selected');
+    }
+
+    actionTypeInput.value = Array.from(selectedActionTypes).join(', ');
+    plot();
+}
+
+async function plot() {
+
+    const params = new URLSearchParams();
+    selectedActionTypes.forEach(type => params.append('type_text', type));
+    params.append('game_id', gameInput.dataset.id);
+    params.append('team_id', teamInput.dataset.id);
+    const apiUrl = `/api/v1/actions?${params.toString()}`;
+
+    try {
+
+        const response = await fetch(apiUrl);
+        const actions = await response.json();
+
+        // Normalize coordinates: [-50, 50] --> [0, 100], [-25, 25] --> [0, 50]
+        const normalized = actions.map(a => ({
+            x: a.coordinate_x + 50,
+            y: a.coordinate_y + 25,
+            z: a.scoring_play ? a.score_value : 0
+        }));
+
+        const trace = {
+            x: normalized.map(d => d.x),
+            y: normalized.map(d => d.y),
+            z: normalized.map(d => d.z),
+            type: 'scatter',
+            mode: 'markers'
+        };
+
+        const layout = {
+            title: 'Scoring Map',
+            xaxis: { title: 'Court Width', range: [0, 100], showgrid: false },
+            yaxis: { title: 'Court Height', range: [0, 50], showgrid: false },
+            margin: { t: 40 },
+            plot_bgcolor: '#fff'
+        };
+        const graphDiv = document.getElementById('graph');
+        Plotly.purge(graphDiv);
+        Plotly.newPlot('graph', [trace], layout);
+
+    } catch (error) {
+        console.error('Failed to load action data:', error);
     }
 }

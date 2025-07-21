@@ -93,25 +93,31 @@ aside {
     visibility: hidden;
 }
 
-#team-input, #game-input {
+#team-input, #game-input, #action-type-input{
     width: 100%;
     padding: 6px 10px;
     box-sizing: border-box;
     font-size: 14px;
 }
 
-#team-suggestions, #game-suggestions li {
+#team-suggestions li, #game-suggestions li, #action-type-suggestions li {
     display: block;
     background: var(--illinois-storm);
 }
 
-#team-suggestions li, #game-suggestions li {
+#team-suggestions li, #game-suggestions li, #action-type-suggestions li {
     padding: 8px 10px;
     cursor: pointer;
 }
 
-#team-suggestions li:hover, #game-suggestions li:hover {
+#team-suggestions li:hover, #game-suggestions li:hover, #action-type-suggestions li:hover {
     background-color: var(--illinois-orange);
+}
+
+#action-type-suggestions li.selected {
+    background-color: var(--illinois-orange);
+    font-weight: bold;
+    cursor: pointer;
 }
 
 /* === Tables and Graphs === */
@@ -121,11 +127,10 @@ main {
     overflow-y: auto;
 }
 
-#graph, #table {
-    min-height: 45%;
+#graph {
+    min-height: 80%;
     width: 100%;
     margin-top: 1rem;
-    background: var(--illinois-orange);
     align-items: center;
     justify-content: center;
 }

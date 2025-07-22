@@ -1,2 +1,2 @@
 # cbb-stats
-Analyzing Sidearm Sports box scores and play-by-play data for college basketball programs
+Full-stack basketball data science pipeline and analytics platform.
